@@ -44,7 +44,7 @@ def parse_response(response):
 
 
 
-st.title('Reconocimiento de texto en imagenes')
+st.title('Reconocimiento de Materiales DEMO')
 
 
 
