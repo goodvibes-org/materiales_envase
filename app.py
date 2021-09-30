@@ -28,11 +28,16 @@ class Google_recognititon:
         # self.image.source.image_uri = image_url
         response = self.client.label_detection(image=self.image)
         return response.label_annotations
+def nonparsing(response):
+	nonselected=[]
+	for annotation in response:
+		nonselected.append((annotation.description, annotation.score))
+	return nonselected
 
 
 def parse_response(response):
 	selected=[]
-	lista_de_materiales=['plastic','glass','cardboard','metal','paper']
+	lista_de_materiales=['plastic','glass','cardboard','metal','paper','tin']
 	for annotation in response:
 		for word in annotation.description.split():
 			print(word)
@@ -64,13 +69,22 @@ if uploaded_file:
 	with st.spinner("Reconociendo texto..."): 
 		recog=Google_recognititon(uploaded_file.read(), credentials).recognition()
 		parsed_response=parse_response(recog)
+		non_parsed_response=nonparsing(recog)
 		# print(recog)
 		st.markdown(
 			"""
-			# Materiales reconocidos en imagen: 
+			## Materiales reconocidos en imagen: 
 			""")
 		for node in parsed_response:
 			st.write('Material: {} \n'.format(node[0]))
 			st.write('Puntaje: {}'.format(node[1]))
+		st.markdown('''
+		
+		### Respuesta cruda de Google:
+		'''
+		)
 
+		for node in non_parsed_response:
+			st.write('Termino: {} \n'.format(node[0]))
+			st.write('Puntaje: {}'.format(node[1]))
 	# download.return_button(recog)	
